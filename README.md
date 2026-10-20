@@ -1,4 +1,4 @@
-# 🇦🇷 Lourvix ES · 
+#  Lourvix ES · 
 
 Aula interativa de **espanhol profissional** voltada para um desenvolvedor backend brasileiro que atua com times argentinos em projetos de tecnologia, finanças e administração.
 

@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Español Profesional · Fernando</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2330;
+      --border: #2d3748;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --accent2: #3fb950;
+      --gold: #e3b341;
+      --danger: #f85149;
+      --radius: 14px;
+      --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.65;
+      padding: 0 0 60px;
+    }
+    header {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 48px 24px 8px;
+    }
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(88, 166, 255, 0.08);
+      border: 1px solid rgba(88, 166, 255, 0.25);
+      padding: 6px 12px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    h1 span { color: var(--accent); }
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+      max-width: 640px;
+    }
+    main {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .section-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-top: 28px;
+      overflow: hidden;
+    }
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(88, 166, 255, 0.06), transparent);
+    }
+    .section-num {
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      background: rgba(88, 166, 255, 0.12);
+      border: 1px solid rgba(88, 166, 255, 0.3);
+      border-radius: 8px;
+      padding: 4px 9px;
+      white-space: nowrap;
+    }
+    .section-head h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .section-body { padding: 22px; }
+
+    /* Flashcards */
+    .flash-intro {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+    .flash-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 14px;
+    }
+    .flashcard {
+      perspective: 1000px;
+      height: 200px;
+      cursor: pointer;
+      outline: none;
+    }
+    .flashcard:focus-visible .flash-inner {
+      box-shadow: 0 0 0 3px var(--accent);
+      border-radius: 14px;
+    }
+    .flash-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.55s cubic-bezier(0.4, 0.2, 0.2, 1);
+      transform-style: preserve-3d;
+      border-radius: 14px;
+    }
+    .flashcard.flipped .flash-inner { transform: rotateY(180deg); }
+    .flash-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border: 1px solid var(--border);
+      overflow-y: auto;
+    }
+    .flash-front {
+      background: var(--surface2);
+      border-color: var(--border);
+    }
+    .flash-front .tag {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .flash-front .term {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.25;
+      word-break: break-word;
+    }
+    .flash-front .hint {
+      margin-top: 10px;
+      font-size: 0.7rem;
+      color: var(--muted);
+      opacity: 0.8;
+    }
+    .flash-back {
+      background: linear-gradient(145deg, #1c2b3a, #161b22);
+      border-color: rgba(88, 166, 255, 0.3);
+      transform: rotateY(180deg);
+      justify-content: flex-start;
+    }
+    .flash-back .translation {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent2);
+      margin-bottom: 6px;
+    }
+    .flash-back .definition {
+      font-size: 0.82rem;
+      color: #c9d1d9;
+      line-height: 1.5;
+    }
+    .flash-back .example {
+      margin-top: 8px;
+      font-size: 0.76rem;
+      font-style: italic;
+      color: var(--muted);
+      border-top: 1px dashed var(--border);
+      padding-top: 6px;
+    }
+
+    /* Narrativa */
+    .narrativa {
+      font-size: 0.98rem;
+      color: #d1d9e0;
+      margin-bottom: 24px;
+    }
+    .narrativa p { margin-bottom: 14px; }
+    .narrativa .dialogo {
+      border-left: 3px solid var(--accent);
+      padding: 10px 0 10px 16px;
+      margin: 14px 0;
+      background: rgba(88, 166, 255, 0.04);
+      border-radius: 0 8px 8px 0;
+      color: #c9d1d9;
+      font-style: italic;
+    }
+    .narrativa .dialogo.fernando { border-left-color: var(--accent2); }
+    .narrativa .speaker {
+      display: block;
+      font-style: normal;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .highlight {
+      background: rgba(227, 179, 65, 0.15);
+      color: var(--gold);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    /* Quiz */
+    .score-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding: 12px 16px;
+      background: var(--surface2);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+    .score-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+    }
+    .score-pill strong {
+      font-size: 1.15rem;
+      color: var(--gold);
+      font-variant-numeric: tabular-nums;
+    }
+    .progress-wrap {
+      flex: 1;
+      min-width: 120px;
+      height: 8px;
+      background: var(--bg);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+    .q-item {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+    .q-item.answered-correct { border-color: rgba(63, 185, 80, 0.5); }
+    .q-item.answered-wrong { border-color: rgba(248, 81, 73, 0.5); }
+    .q-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .q-num {
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .q-points {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--gold);
+      background: rgba(227, 179, 65, 0.1);
+      border: 1px solid rgba(227, 179, 65, 0.25);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+    .q-text {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #e6edf3;
+    }
+    .options { display: flex; flex-direction: column; gap: 8px; }
+    .option {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 10px 13px;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.18s;
+      color: #c9d1d9;
+      text-align: left;
+      font-family: inherit;
+    }
+    .option:hover { border-color: var(--accent); background: rgba(88, 166, 255, 0.05); }
+    .option .marker {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--muted);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--muted);
+      margin-top: 1px;
+      transition: all 0.18s;
+    }
+    .option.correct {
+      border-color: var(--accent2);
+      background: rgba(63, 185, 80, 0.1);
+      color: #d2f5d8;
+    }
+    .option.correct .marker {
+      background: var(--accent2);
+      border-color: var(--accent2);
+      color: #0d1117;
+    }
+    .option.wrong {
+      border-color: var(--danger);
+      background: rgba(248, 81, 73, 0.08);
+      color: #ffd7d5;
+    }
+    .option.wrong .marker {
+      background: var(--danger);
+      border-color: var(--danger);
+      color: #fff;
+    }
+    .option:disabled { cursor: default; opacity: 0.85; }
+    .feedback {
+      margin-top: 10px;
+      font-size: 0.82rem;
+      border-radius: 8px;
+      padding: 9px 12px;
+      display: none;
+      line-height: 1.5;
+    }
+    .feedback.show { display: block; }
+    .feedback.ok {
+      background: rgba(63, 185, 80, 0.1);
+      border: 1px solid rgba(63, 185, 80, 0.3);
+      color: #aff5b8;
+    }
+    .feedback.ko {
+      background: rgba(248, 81, 73, 0.08);
+      border: 1px solid rgba(248, 81, 73, 0.3);
+      color: #ffc1be;
+    }
+
+    /* Tabla de verbos */
+    .regla-voseo {
+      font-size: 0.85rem;
+      color: #c9d1d9;
+      background: rgba(88, 166, 255, 0.06);
+      border: 1px solid rgba(88, 166, 255, 0.25);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      line-height: 1.55;
+    }
+    .regla-voseo strong { color: var(--text); }
+    .regla-voseo .vos { color: var(--accent2); font-weight: 700; }
+    .regla-voseo .imp { color: var(--gold); font-weight: 700; }
+    .table-wrap { overflow-x: auto; border-radius: 12px; }
+    .verb-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      min-width: 640px;
+    }
+    .verb-table thead th {
+      text-align: left;
+      font-size: 0.66rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .verb-table tbody td {
+      padding: 13px 12px;
+      border-bottom: 1px solid rgba(45, 55, 72, 0.55);
+      vertical-align: top;
+      color: #c9d1d9;
+    }
+    .verb-table tbody tr:last-child td { border-bottom: none; }
+    .verb-table tbody tr:hover { background: rgba(88, 166, 255, 0.04); }
+    .verb-table .inf {
+      font-weight: 800;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+    .verb-table .meaning {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+    .verb-table .vos { color: var(--accent2); font-weight: 700; white-space: nowrap; }
+    .verb-table .imp { color: var(--gold); font-weight: 700; white-space: nowrap; }
+    .verb-table .ex {
+      font-style: italic;
+      color: #b6c2cf;
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+    @media (max-width: 720px) {
+      .verb-table { min-width: 0; }
+      .verb-table thead { display: none; }
+      .verb-table, .verb-table tbody, .verb-table tr, .verb-table td {
+        display: block;
+        width: 100%;
+      }
+      .verb-table tr {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        margin-bottom: 12px;
+        padding: 6px 4px;
+      }
+      .verb-table td {
+        padding: 8px 12px !important;
+        border-bottom: 1px dashed rgba(45, 55, 72, 0.5);
+      }
+      .verb-table tr td:last-child { border-bottom: none; }
+      .verb-table td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 0.62rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 3px;
+        font-weight: 700;
+      }
+      .verb-table .ex { font-size: 0.84rem; }
+    }
+    footer {
+      max-width: 920px;
+      margin: 40px auto 0;
+      padding: 0 24px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">LOURVIX · INMERSIÓN ACTIVA</div>
+  <h1>Español Profesional · <span>Fernando</span></h1>
+  <p class="subtitle">
+    Flashcards, escenario crítico y verbos en voseo para dominar el español de trabajo con tus colegas de Buenos Aires.
+  </p>
+</header>
+
+<main>
+
+  <!-- ================= 01 · MEMORIA ACTIVA ================= -->
+  <section class="section-card">
+    <div class="section-head">
+      <span class="section-num">01 · Memoria Activa</span>
+      <h2>Flashcards · Expresiones Argentinas</h2>
+    </div>
+    <div class="section-body">
+      <p class="flash-intro">
+        Haz clic en cada carta para virar y ver la traducción y el contexto. Expresiones de Argentina para el día a día profesional.
+      </p>
+      <div class="flash-grid" id="flashGrid">
+
+        <!-- Che -->
+        <div class="flashcard" tabindex="0" role="button" aria-label="Flashcard Che">
+          <div class="flash-inner">
+            <div class="flash-face flash-front">
+              <span class="tag">Argentina · Apertura</span>
+              <span class="term">Che</span>
+              <span class="hint">→ clic para ver significado</span>
+            </div>
+            <div class="flash-face flash-back">
+              <span class="translation">“cara”, “olha”, “viu”</span>
+              <p class="definition">La palabra más clásica de Argentina. Usada para llamar la atención de un colega o iniciar una frase.</p>
+              <p class="example">«¿Che, miraste el Pull Request que te mandé?»</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Boludo -->
+        <div class="flashcard" tabindex="0" role="button" aria-label="Flashcard Boludo">
+          <div class="flash-inner">
+            <div class="flash-face flash-front">
+              <span class="tag">Argentina · Informal</span>
+              <span class="term">Boludo</span>
+              <span class="hint">→ clic para ver significado</span>
+            </div>
+            <div class="flash-face flash-back">
+              <span class="translation">“cara”, “mano”</span>
+              <p class="definition">Entre colegas con mucha intimidad y nivel horizontal. Cuidado: en ambientes formales o con gestores puede sonar irrespetuoso.</p>
+              <p class="example">«Dale, boludo, aprobame el PR así mergeamos.»</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Posta -->
+        <div class="flashcard" tabindex="0" role="button" aria-label="Flashcard Posta">
+          <div class="flash-inner">
+            <div class="flash-face flash-front">
+              <span class="tag">Argentina · Confirmación</span>
+              <span class="term">Posta / ¿Es posta?</span>
+              <span class="hint">→ clic para ver significado</span>
+            </div>
+            <div class="flash-face flash-back">
+              <span class="translation">“verdad” / “¿es en serio?”</span>
+              <p class="definition">Se usa para confirmar que algo es verdad o para expresar sorpresa ante una situación.</p>
+              <p class="example">«¿Posta que se cayó el servidor de base de datos?»</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tomar un mate -->
+        <div class="flashcard" tabindex="0" role="button" aria-label="Flashcard Tomar un mate">
+          <div class="flash-inner">
+            <div class="flash-face flash-front">
+              <span class="tag">Argentina · Cultura</span>
+              <span class="term">Tomar un mate</span>
+              <span class="hint">→ clic para ver significado</span>
+            </div>
+            <div class="flash-face flash-back">
+              <span class="translation">“tomar um cafezinho”</span>
+              <p class="definition">O equivalente ao “cafezinho” no Brasil. Se alguém te convidar para tomar un mate, é o momento de descontrair, falar do projeto de forma informal ou alinhar alguma arquitetura.</p>
+              <p class="example">«Che, ¿tomamos un mate y repasamos el diseño del microservicio?»</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tunar -->
+        <div class="flashcard" tabindex="0" role="button" aria-label="Flashcard Tunar">
+          <div class="flash-inner">
+            <div class="flash-face flash-front">
+              <span class="tag">Argentina · Performance</span>
+              <span class="term">Tunar</span>
+              <span class="hint">→ clic para ver significado</span>
+            </div>
+            <div class="flash-face flash-back">
+              <span class="translation">refinar / otimizar</span>
+              <p class="definition">Adaptado del inglés <em>to tune</em>. Significa refinar y optimizar procesos.</p>
+              <p class="example">«Hay que tunar esta query de Hibernate porque está matando la base del banco.»</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Limar -->
+        <div class="flashcard" tabindex="0" role="button" aria-label="Flashcard Limar">
+          <div class="flash-inner">
+            <div class="flash-face flash-front">
+              <span class="tag">Argentina · Performance</span>
+              <span class="term">Limar</span>
+              <span class="hint">→ clic para ver significado</span>
+            </div>
+            <div class="flash-face flash-back">
+              <span class="translation">polir / reduzir ao máximo</span>
+              <p class="definition">Expressão portenha para reduzir ao máximo, polir ou detalhar algo minuciosamente até a perfeição.</p>
+              <p class="example">«Vamos a limar unos milisegundos en el procesamiento del batch.»</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pincharse -->
+        <div class="flashcard" tabindex="0" role="button" aria-label="Flashcard Pincharse">
+          <div class="flash-inner">
+            <div class="flash-face flash-front">
+              <span class="tag">Argentina · Falha</span>
+              <span class="term">Pincharse / Romperse</span>
+              <span class="hint">→ clic para ver significado</span>
+            </div>
+            <div class="flash-face flash-back">
+              <span class="translation">falhar / quebrar</span>
+              <p class="definition">Usado quando o código ou o servidor falha (muda de estado ou cai devido a um erro, como um OutOfMemoryError em Java).</p>
+              <p class="example">«Se pinchó el microservicio de transferencias por la cantidad de hilos nativos.»</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Escupir -->
+        <div class="flashcard" tabindex="0" role="button" aria-label="Flashcard Escupir">
+          <div class="flash-inner">
+            <div class="flash-face flash-front">
+              <span class="tag">Argentina · API</span>
+              <span class="term">Escupir</span>
+              <span class="hint">→ clic para ver significado</span>
+            </div>
+            <div class="flash-face flash-back">
+              <span class="translation">retornar rapidamente / emitir</span>
+              <p class="definition">Usado no sentido de retornar dados rapidamente ou emitir logs.</p>
+              <p class="example">«El endpoint tiene que escupir el JSON del saldo en menos de 50ms.»</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stremear -->
+        <div class="flashcard" tabindex="0" role="button" aria-label="Flashcard Stremear">
+          <div class="flash-inner">
+            <div class="flash-face flash-front">
+              <span class="tag">Argentina · Java</span>
+              <span class="term">Stremear</span>
+              <span class="hint">→ clic para ver significado</span>
+            </div>
+            <div class="flash-face flash-back">
+              <span class="translation">manipular fluxos de dados</span>
+              <p class="definition">Muito comum ao usar a API de Streams do Java moderno para processamento de coleções bancárias.</p>
+              <p class="example">«Podés stremear la lista de transacciones para filtrar las que son fraudulentas.»</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inyectar -->
+        <div class="flashcard" tabindex="0" role="button" aria-label="Flashcard Inyectar">
+          <div class="flash-inner">
+            <div class="flash-face flash-front">
+              <span class="tag">Argentina · Spring</span>
+              <span class="term">Inyectar</span>
+              <span class="hint">→ clic para ver significado</span>
+            </div>
+            <div class="flash-face flash-back">
+              <span class="translation">injetar (dependências)</span>
+              <p class="definition">Referência direta à injeção de dependências (Spring Framework / CDI).</p>
+              <p class="example">«Fijate de inyectar bien el service en el controller.»</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mergear / Pushear / Commitear -->
+        <div class="flashcard" tabindex="0" role="button" aria-label="Flashcard Git">
+          <div class="flash-inner">
+            <div class="flash-face flash-front">
+              <span class="tag">Argentina · Git</span>
+              <span class="term">Mergear / Pushear / Commitear</span>
+              <span class="hint">→ clic para ver significado</span>
+            </div>
+            <div class="flash-face flash-back">
+              <span class="translation">mergear / pushar / commitar</span>
+              <p class="definition">Aportunhações indispensáveis para o controle de versão com Git.</p>
+              <p class="example">«¿Ya mergeaste las optimizaciones a main?»</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ponerse las pilas -->
+        <div class="flashcard" tabindex="0" role="button" aria-label="Flashcard Ponerse las pilas">
+          <div class="flash-inner">
+            <div class="flash-face flash-front">
+              <span class="tag">Argentina · Foco</span>
+              <span class="term">Ponerse las pilas</span>
+              <span class="hint">→ clic para ver significado</span>
+            </div>
+            <div class="flash-face flash-back">
+              <span class="translation">focar / se esforçar</span>
+              <p class="definition">Expressão clássica que significa focar, colocar energia e resolver um problema difícil de forma ágil.</p>
+              <p class="example">«Che, hay que ponerse las pilas con los tests unitarios antes del deploy.»</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Colgarse -->
+        <div class="flashcard" tabindex="0" role="button" aria-label="Flashcard Colgarse">
+          <div class="flash-inner">
+            <div class="flash-face flash-front">
+              <span class="tag">Argentina · Falha / distração</span>
+              <span class="term">Colgarse</span>
+              <span class="hint">→ clic para ver significado</span>
+            </div>
+            <div class="flash-face flash-back">
+              <span class="translation">travar / esquecer de responder</span>
+              <p class="definition">Ficar travado, esquecer de responder ou perder o foco (aplica-se tanto ao sistema travado quanto ao desenvolvedor distraído).</p>
+              <p class="example">«Se colgó el servidor de testing» / «Disculpá, me colgué y no vi tu Pull Request».</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chamuyar -->
+        <div class="flashcard" tabindex="0" role="button" aria-label="Flashcard Chamuyar">
+          <div class="flash-inner">
+            <div class="flash-face flash-front">
+              <span class="tag">Argentina · Reunião</span>
+              <span class="term">Chamuyar</span>
+              <span class="hint">→ clic para ver significado</span>
+            </div>
+            <div class="flash-face flash-back">
+              <span class="translation">enrolar / dar desculpas</span>
+              <p class="definition">No ambiente técnico de Buenos Aires, descreve a ação de “enrolar” em reuniões diárias (dailies) quando uma tarefa não avançou ou dar uma explicação superficial ao Product Owner.</p>
+              <p class="example">«No avancé nada con el refactor, mañana veo qué le chamuyo ao Scrum Master.»</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 07 · ATENCIÓN CRÍTICA ================= -->
+  <section class="section-card">
+    <div class="section-head">
+      <span class="section-num">07 · Atención Crítica</span>
+      <h2>Situación hipotética: tu cerebro en tensión real</h2>
+    </div>
+    <div class="section-body">
+
+      <div class="narrativa">
+        <p>
+          El reloj marcaba las diez de la mañana cuando Fernando se conectó a la videollamada. Del otro lado, el equipo de Buenos Aires revisaba los logs del microservicio de transferencias.
+        </p>
+
+        <div class="dialogo">
+          <span class="speaker">Martín · Líder técnico</span>
+          —Che, Fernando, se pinchó el servicio de pagos después del último deploy. El endpoint tiene que escupir el JSON del saldo en menos de 50 ms, pero está demorando 200 ms.
+        </div>
+
+        <p>
+          Fernando respiró hondo. Sabía que tenía que tunar la query de Hibernate y limar unos milisegundos en el procesamiento del batch.
+        </p>
+
+        <div class="dialogo fernando">
+          <span class="speaker">Fernando</span>
+          —Mirá, el problema está en cómo el framework gestiona el pool de conexiones. Podés stremear la lista de transacciones para filtrar las fraudulentas y así mitigar la carga.
+        </div>
+
+        <div class="dialogo">
+          <span class="speaker">Arquitecto</span>
+          —¿Y qué proponés? No me cierra la idea de meter un parche ahora.
+        </div>
+
+        <div class="dialogo fernando">
+          <span class="speaker">Fernando</span>
+          —No es un parche. Propongo inyectar bien el service en el controller, mergear las optimizaciones a main y pushear el cambio. Si implementás esto, destrabás el flujo de transacciones y el backend rinde mejor bajo alta carga.
+        </div>
+
+        <div class="dialogo">
+          <span class="speaker">Martín</span>
+          —Dale, hacelo. Pero ponete las pilas con los tests unitarios antes del deploy. No te cuelgues como la última vez.
+        </div>
+
+        <div class="dialogo fernando">
+          <span class="speaker">Fernando</span>
+          —Tranquilo, no me voy a chamuyar. Ya tengo el presupuesto listo y voy a relevar los datos del servidor para ver dónde se frena el proceso.
+        </div>
+      </div>
+
+      <!-- Quiz -->
+      <div id="quizContainer">
+
+        <!-- P1 -->
+        <div class="q-item" data-q="1">
+          <div class="q-meta">
+            <span class="q-num">PREGUNTA 01 · VOCABULARIO</span>
+            <span class="q-points">10 pts</span>
+          </div>
+          <p class="q-text">¿Qué significa «se pinchó el servicio» en el contexto de la narrativa?</p>
+          <div class="options">
+            <button class="option" data-correct="false"><span class="marker">A</span> El servicio se volvió más rápido.</button>
+            <button class="option" data-correct="true"><span class="marker">B</span> El servicio falló o se cayó.</button>
+            <button class="option" data-correct="false"><span class="marker">C</span> El servicio se actualizó correctamente.</button>
+            <button class="option" data-correct="false"><span class="marker">D</span> El servicio se reinició sin problemas.</button>
+          </div>
+          <div class="feedback" data-ok="Correcto. «Pincharse» significa fallar o caerse, como un OutOfMemoryError en Java." data-ko="«Pincharse» en jerga argentina técnica significa fallar o caerse. La opción correcta es B."></div>
+        </div>
+
+        <!-- P2 -->
+        <div class="q-item" data-q="2">
+          <div class="q-meta">
+            <span class="q-num">PREGUNTA 02 · VERBO TÉCNICO</span>
+            <span class="q-points">10 pts</span>
+          </div>
+          <p class="q-text">¿Qué verbo usa Martín para decir que el endpoint debe devolver el JSON rápidamente?</p>
+          <div class="options">
+            <button class="option" data-correct="false"><span class="marker">A</span> Limar</button>
+            <button class="option" data-correct="false"><span class="marker">B</span> Tunar</button>
+            <button class="option" data-correct="true"><span class="marker">C</span> Escupir</button>
+            <button class="option" data-correct="false"><span class="marker">D</span> Stremear</button>
+          </div>
+          <div class="feedback" data-ok="Exacto. «Escupir» se usa para retornar datos rápidamente o emitir logs." data-ko="El verbo es «escupir»: el endpoint tiene que escupir el JSON en menos de 50 ms."></div>
+        </div>
+
+        <!-- P3 -->
+        <div class="q-item" data-q="3">
+          <div class="q-meta">
+            <span class="q-num">PREGUNTA 03 · IMPERATIVO VOSEO</span>
+            <span class="q-points">10 pts</span>
+          </div>
+          <p class="q-text">¿Cuál es la forma correcta del imperativo de «tunar» con vos?</p>
+          <div class="options">
+            <button class="option" data-correct="false"><span class="marker">A</span> Tuna</button>
+            <button class="option" data-correct="true"><span class="marker">B</span> Tuná</button>
+            <button class="option" data-correct="false"><span class="marker">C</span> Tune</button>
+            <button class="option" data-correct="false"><span class="marker">D</span> Tunás</button>
+          </div>
+          <div class="feedback" data-ok="Correcto. El imperativo voseo de «tunar» es «tuná» (quitando la -r del infinitivo)." data-ko="El imperativo voseo se forma quitando la -r: tunar → tuná. La opción correcta es B."></div>
+        </div>
+
+        <!-- P4 -->
+        <div class="q-item" data-q="4">
+          <div class="q-meta">
+            <span class="q-num">PREGUNTA 04 · SIGNIFICADO</span>
+            <span class="q-points">10 pts</span>
+          </div>
+          <p class="q-text">¿Qué significa «limar unos milisegundos»?</p>
+          <div class="options">
+            <button class="option" data-correct="false"><span class="marker">A</span> Aumentar el tiempo de procesamiento.</button>
+            <button class="option" data-correct="true"><span class="marker">B</span> Reducir al máximo o pulir pequeños detalles de rendimiento.</button>
+            <button class="option" data-correct="false"><span class="marker">C</span> Eliminar todos los milisegundos del sistema.</button>
+            <button class="option" data-correct="false"><span class="marker">D</span> Medir los milisegundos con una herramienta.</button>
+          </div>
+          <div class="feedback" data-ok="Muy bien. «Limar» es pulir o reducir al máximo, en este caso, milisegundos de procesamiento." data-ko="«Limar» significa pulir o reducir al máximo. La opción correcta es B."></div>
+        </div>
+
+        <!-- P5 -->
+        <div class="q-item" data-q="5">
+          <div class="q-meta">
+            <span class="q-num">PREGUNTA 05 · VERBO JAVA</span>
+            <span class="q-points">10 pts</span>
+          </div>
+          <p class="q-text">¿Qué verbo se usa para «filtrar la lista de transacciones» usando la API de Streams de Java?</p>
+          <div class="options">
+            <button class="option" data-correct="false"><span class="marker">A</span> Inyectar</button>
+            <button class="option" data-correct="false"><span class="marker">B</span> Mergear</button>
+            <button class="option" data-correct="true"><span class="marker">C</span> Stremear</button>
+            <button class="option" data-correct="false"><span class="marker">D</span> Parsear</button>
+          </div>
+          <div class="feedback" data-ok="Correcto. «Stremear» se refiere a manipular flujos de datos con la API de Streams." data-ko="El verbo es «stremear»: podés stremear la lista de transacciones para filtrar las fraudulentas."></div>
+        </div>
+
+        <!-- P6 -->
+        <div class="q-item" data-q="6">
+          <div class="q-meta">
+            <span class="q-num">PREGUNTA 06 · SPRING</span>
+            <span class="q-points">10 pts</span>
+          </div>
+          <p class="q-text">¿Qué significa «inyectar el service en el controller»?</p>
+          <div class="options">
+            <button class="option" data-correct="true"><span class="marker">A</span> Aplicar inyección de dependencias (Spring / CDI).</button>
+            <button class="option" data-correct="false"><span class="marker">B</span> Escribir el service directamente en el controller.</button>
+            <button class="option" data-correct="false"><span class="marker">C</span> Eliminar el service del controller.</button>
+            <button class="option" data-correct="false"><span class="marker">D</span> Renombrar el service.</button>
+          </div>
+          <div class="feedback" data-ok="Exacto. «Inyectar» hace referencia a la inyección de dependencias." data-ko="«Inyectar» se refiere a la inyección de dependencias (Spring Framework / CDI). La opción correcta es A."></div>
+        </div>
+
+        <!-- P7 -->
+        <div class="q-item" data-q="7">
+          <div class="q-meta">
+            <span class="q-num">PREGUNTA 07 · IMPERATIVO VOSEO</span>
+            <span class="q-points">10 pts</span>
+          </div>
+          <p class="q-text">¿Cuál es el imperativo de «mergear» con vos?</p>
+          <div class="options">
+            <button class="option" data-correct="false"><span class="marker">A</span> Mergea</button>
+            <button class="option" data-correct="false"><span class="marker">B</span> Merge</button>
+            <button class="option" data-correct="true"><span class="marker">C</span> Mergeá</button>
+            <button class="option" data-correct="false"><span class="marker">D</span> Mergeás</button>
+          </div>
+          <div class="feedback" data-ok="Correcto. El imperativo voseo de «mergear» es «mergeá»." data-ko="El imperativo voseo de «mergear» es «mergeá» (se quita la -r y se acentúa la última sílaba)."></div>
+        </div>
+
+        <!-- P8 -->
+        <div class="q-item" data-q="8">
+          <div class="q-meta">
+            <span class="q-num">PREGUNTA 08 · EXPRESIÓN</span>
+            <span class="q-points">10 pts</span>
+          </div>
+          <p class="q-text">¿Qué significa «ponerse las pilas»?</p>
+          <div class="options">
+            <button class="option" data-correct="false"><span class="marker">A</span> Colocar baterías en el servidor.</button>
+            <button class="option" data-correct="true"><span class="marker">B</span> Focar, esforzarse e resolver um problema com energia.</button>
+            <button class="option" data-correct="false"><span class="marker">C</span> Desligar o sistema.</button>
+            <button class="option" data-correct="false"><span class="marker">D</span> Pedir mais tempo ao cliente.</button>
+          </div>
+          <div class="feedback" data-ok="Muy bien. «Ponerse las pilas» es enfocarse y esforzarse para resolver algo." data-ko="«Ponerse las pilas» significa focar, colocar energia e resolver um problema. La opción correcta es B."></div>
+        </div>
+
+        <!-- P9 -->
+        <div class="q-item" data-q="9">
+          <div class="q-meta">
+            <span class="q-num">PREGUNTA 09 · COLGARSE</span>
+            <span class="q-points">10 pts</span>
+          </div>
+          <p class="q-text">¿Qué significa «colgarse» en el contexto laboral de la narrativa?</p>
+          <div class="options">
+            <button class="option" data-correct="false"><span class="marker">A</span> Pendurar o servidor na parede.</button>
+            <button class="option" data-correct="true"><span class="marker">B</span> Ficar travado, esquecer de responder ou perder o foco.</button>
+            <button class="option" data-correct="false"><span class="marker">C</span> Fazer uma ligação telefônica.</button>
+            <button class="option" data-correct="false"><span class="marker">D</span> Finalizar uma tarefa rapidamente.</button>
+          </div>
+          <div class="feedback" data-ok="Correcto. «Colgarse» puede significar que el sistema se trabó o que el desarrollador se distrajo." data-ko="«Colgarse» significa ficar travado, esquecer de responder ou perder o foco. La opción correcta es B."></div>
+        </div>
+
+        <!-- P10 -->
+        <div class="q-item" data-q="10">
+          <div class="q-meta">
+            <span class="q-num">PREGUNTA 10 · CHAMUYAR</span>
+            <span class="q-points">10 pts</span>
+          </div>
+          <p class="q-text">¿Qué significa «chamuyar» en una reunión de trabajo?</p>
+          <div class="options">
+            <button class="option" data-correct="false"><span class="marker">A</span> Fazer uma apresentação técnica detalhada.</button>
+            <button class="option" data-correct="true"><span class="marker">B</span> Enrolar ou dar uma explicação superficial quando a tarefa não avançou.</button>
+            <button class="option" data-correct="false"><span class="marker">C</span> Pedir demissão.</button>
+            <button class="option" data-correct="false"><span class="marker">D</span> Elogiar o trabalho do colega.</button>
+          </div>
+          <div class="feedback" data-ok="Exacto. «Chamuyar» é enrolar ou dar uma desculpa superficial em reuniões quando a tarefa não avançou." data-ko="«Chamuyar» significa enrolar ou dar uma explicação superficial. La opción correcta es B."></div>
+        </div>
+
+      </div>
+
+      <!-- Pontuação -->
+      <div class="score-bar">
+        <div class="score-pill">
+          Puntuación: <strong id="scoreDisplay">0</strong> <span style="color: var(--muted); font-size: 0.75rem;">/ 100</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="score-pill" style="font-size: 0.75rem; color: var(--muted);">
+          Respondidas: <strong id="answeredDisplay" style="color: var(--text); font-size: 0.9rem;">0</strong>/10
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= 08 · VERBOS EN VOSEO ================= -->
+  <section class="section-card">
+    <div class="section-head">
+      <span class="section-num">08 · Léxico verbal</span>
+      <h2>10 verbos de reunión en voseo</h2>
+    </div>
+    <div class="section-body">
+
+      <p class="flash-intro">
+        Verbos que aparecen en cada reunión con Buenos Aires. A la izquierda, el infinitivo y su significado en el contexto financiero/técnico. Al centro, las dos formas que <strong>vos</strong> vas a escuchar y a usar. A la derecha, un ejemplo real de la narrativa o del día a día.
+      </p>
+
+      <div class="regla-voseo">
+        <strong>Regla rápida:</strong>
+        Presente → acento en la última sílaba: <span class="vos">-ás / -és / -ís</span>.
+        Imperativo → quitar la <em>-r</em> del infinitivo: <span class="imp">hablar → hablá</span>, <span class="imp">comer → comé</span>, <span class="imp">vivir → viví</span>.
+      </div>
+
+      <div class="table-wrap">
+        <table class="verb-table">
+          <thead>
+            <tr>
+              <th>Verbo · significado</th>
+              <th>Presente · vos</th>
+              <th>Imperativo · vos</th>
+              <th>Ejemplo en contexto</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr>
+              <td data-label="Verbo"><span class="inf">Destrabar</span><span class="meaning">Solucionar un cuello de botella (gargalo)</span></td>
+              <td data-label="Presente · vos"><span class="vos">Vos destrabás</span></td>
+              <td data-label="Imperativo · vos"><span class="imp">Destrabá vos</span></td>
+              <td data-label="Ejemplo" class="ex">«Si optimizamos este microservicio, destrabás el flujo de transacciones.»</td>
+            </tr>
+
+            <tr>
+              <td data-label="Verbo"><span class="inf">Analizar</span><span class="meaning">Evaluar métricas o flujos financieros</span></td>
+              <td data-label="Presente · vos"><span class="vos">Vos analizás</span></td>
+              <td data-label="Imperativo · vos"><span class="imp">Analizá vos</span></td>
+              <td data-label="Ejemplo" class="ex">«Necesito que analizás el cuello de botella en la pasarela de pagos.»</td>
+            </tr>
+
+            <tr>
+              <td data-label="Verbo"><span class="inf">Presupuestar</span><span class="meaning">Calcular costos de implementación</span></td>
+              <td data-label="Presente · vos"><span class="vos">Vos presupuestás</span></td>
+              <td data-label="Imperativo · vos"><span class="imp">Presupuestá vos</span></td>
+              <td data-label="Ejemplo" class="ex">«Por favor, presupuestá la infraestructura para el nuevo módulo.»</td>
+            </tr>
+
+            <tr>
+              <td data-label="Verbo"><span class="inf">Implementar</span><span class="meaning">Desplegar código o soluciones</span></td>
+              <td data-label="Presente · vos"><span class="vos">Vos implementás</span></td>
+              <td data-label="Imperativo · vos"><span class="imp">Implementá vos</span></td>
+              <td data-label="Ejemplo" class="ex">«Cuando implementás este cambio, el flujo administrativo mejora.»</td>
+            </tr>
+
+            <tr>
+              <td data-label="Verbo"><span class="inf">Decidir</span><span class="meaning">Tomar determinaciones de negocio</span></td>
+              <td data-label="Presente · vos"><span class="vos">Vos decidís</span></td>
+              <td data-label="Imperativo · vos"><span class="imp">Decidí vos</span></td>
+              <td data-label="Ejemplo" class="ex">«Vos decidís si aprobamos este flujo o si mitigamos el riesgo antes.»</td>
+            </tr>
+
+            <tr>
+              <td data-label="Verbo"><span class="inf">Mitigar</span><span class="meaning">Reducir riesgos financieros o fallas</span></td>
+              <td data-label="Presente · vos"><span class="vos">Vos mitigás</span></td>
+              <td data-label="Imperativo · vos"><span class="imp">Mitigá vos</span></td>
+              <td data-label="Ejemplo" class="ex">«Con esta validación, mitigás las pérdidas por duplicidad.»</td>
+            </tr>
+
+            <tr>
+              <td data-label="Verbo"><span class="inf">Liquidar</span><span class="meaning">Procesar pagos o cerrar cuentas</span></td>
+              <td data-label="Presente · vos"><span class="vos">Vos liquidás</span></td>
+              <td data-label="Imperativo · vos"><span class="imp">Liquidá vos</span></td>
+              <td data-label="Ejemplo" class="ex">«Asegurate de cómo liquidás las órdenes pendientes al final del día.»</td>
+            </tr>
+
+            <tr>
+              <td data-label="Verbo"><span class="inf">Relevar</span><span class="meaning">Levantar requerimientos o información</span></td>
+              <td data-label="Presente · vos"><span class="vos">Vos relevás</span></td>
+              <td data-label="Imperativo · vos"><span class="imp">Relevá vos</span></td>
+              <td data-label="Ejemplo" class="ex">«Relevá los datos del servidor para ver dónde se frena el proceso.»</td>
+            </tr>
+
+            <tr>
+              <td data-label="Verbo"><span class="inf">Demorar</span><span class="meaning">Retrasar (tiempo de respuesta / latency)</span></td>
+              <td data-label="Presente · vos"><span class="vos">Vos demorás</span></td>
+              <td data-label="Imperativo · vos"><span class="imp">Demorá vos</span></td>
+              <td data-label="Ejemplo" class="ex">«Si demorás la confirmación, el sistema financiero cancela el flujo.»</td>
+            </tr>
+
+            <tr>
+              <td data-label="Verbo"><span class="inf">Rendir</span><span class="meaning">Dar rendimiento / Dar cuentas de gastos</span></td>
+              <td data-label="Presente · vos"><span class="vos">Vos rendís</span></td>
+              <td data-label="Imperativo · vos"><span class="imp">Rendí vos</span></td>
+              <td data-label="Ejemplo" class="ex">«Este backend rinde mejor bajo alta carga de peticiones.»</td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Material de práctica · Fernando · Español rioplatense aplicado a administración, finanzas y tecnología</p>
+</footer>
+
+<script>
+  (function() {
+    'use strict';
+
+    /* ============================================================
+       FLASHCARDS · voltear con clic, Enter o Espacio
+       ============================================================ */
+    const flashcards = document.querySelectorAll('.flashcard');
+
+    function toggleCard(card) {
+      card.classList.toggle('flipped');
+      const isFlipped = card.classList.contains('flipped');
+      card.setAttribute('aria-label',
+        (card.getAttribute('aria-label') || 'Flashcard')
+          .replace(isFlipped ? 'ver significado' : 'ver anverso',
+                   isFlipped ? 'ver anverso' : 'ver significado'));
+    }
+
+    flashcards.forEach(card => {
+      card.addEventListener('click', () => toggleCard(card));
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggleCard(card);
+        }
+      });
+    });
+
+    /* ============================================================
+       QUIZ · 10 preguntas × 10 puntos = 100
+       ============================================================ */
+    const quizContainer = document.getElementById('quizContainer');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const answeredDisplay = document.getElementById('answeredDisplay');
+    const progressFill = document.getElementById('progressFill');
+
+    const POINTS = 10;
+    let score = 0;
+    let answeredCount = 0;
+    const totalQuestions = document.querySelectorAll('.q-item').length;
+
+    function updateScoreUI() {
+      scoreDisplay.textContent = score;
+      answeredDisplay.textContent = answeredCount;
+      const pct = (answeredCount / totalQuestions) * 100;
+      progressFill.style.width = pct + '%';
+    }
+
+    quizContainer.addEventListener('click', function(e) {
+      const btn = e.target.closest('.option');
+      if (!btn) return;
+
+      const qItem = btn.closest('.q-item');
+      if (qItem.classList.contains('answered-correct') ||
+          qItem.classList.contains('answered-wrong')) return;
+
+      const isCorrect = btn.dataset.correct === 'true';
+      const options = qItem.querySelectorAll('.option');
+      const feedback = qItem.querySelector('.feedback');
+
+      options.forEach(opt => {
+        opt.disabled = true;
+        if (opt.dataset.correct === 'true') opt.classList.add('correct');
+      });
+
+      if (isCorrect) {
+        qItem.classList.add('answered-correct');
+        btn.classList.add('correct');
+        score += POINTS;
+        feedback.textContent = feedback.dataset.ok || '¡Correcto!';
+        feedback.className = 'feedback ok show';
+      } else {
+        qItem.classList.add('answered-wrong');
+        btn.classList.add('wrong');
+        feedback.textContent = feedback.dataset.ko || 'Revisa la respuesta.';
+        feedback.className = 'feedback ko show';
+      }
+
+      answeredCount++;
+      updateScoreUI();
+    });
+
+    updateScoreUI();
+
+  })();
+</script>
+
+</body>
+</html>
